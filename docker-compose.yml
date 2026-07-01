@@ -58,6 +58,19 @@ services:
       - ./PostgreSql/data:/var/lib/postgresql/data
       - ./PostgreSql/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
 
+  auth-service:
+    build: ./AuthService
+    container_name: auth_service
+    ports:
+      - "5001:5000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://auth_user:auth_pass123@postgres_db:5432/auth_service_db
+    volumes:
+      - ./AuthService:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 5000 --reload
+    depends_on:
+      - postgres
+
 volumes:
   kafka_data:
     driver: local

@@ -48,12 +48,7 @@ services:
       POSTGRES_DB: litebank_main_db
 
       # Формат: назва_бд:юзер:пароль, назва_бд2:юзер2:пароль2
-      POSTGRES_MULTIPLE_DATABASES: "
-      auth_service_db:auth_user:auth_pass123,
-      accounts_db:accounts_user:accounts_pass123,
-      transactions_db:transactions_user:transactions_pass123,
-      ledger_db:ledger_user:ledger_pass123
-      "
+      POSTGRES_MULTIPLE_DATABASES: "auth_service_db:auth_user:auth_pass123,accounts_db:accounts_user:accounts_pass123,transactions_db:transactions_user:transactions_pass123,ledger_db:ledger_user:ledger_pass123"
     volumes:
       - ./PostgreSql/data:/var/lib/postgresql/data
       - ./PostgreSql/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
@@ -69,7 +64,7 @@ services:
       - ./AuthService:/app
     command: uvicorn main:app --host 0.0.0.0 --port 5000 --reload
     depends_on:
-      - postgres
+      - postgres_db
 
 volumes:
   kafka_data:

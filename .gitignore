@@ -1,0 +1,9 @@
+./AccountService/.idea
+./AccountService/.venv
+./AccountService/alembic/versions
+
+./AuthtService/.idea
+./AuthtService/.venv
+./AuthtService/alembic/versions
+
+./PostgreSQL/data

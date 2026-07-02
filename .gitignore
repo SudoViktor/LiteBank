@@ -1,9 +1,12 @@
-./AccountService/.idea
-./AccountService/.venv
-./AccountService/alembic/versions
+# Ігноруємо середовища розробки (всюди, у будь-якій папці)
+.idea/
+.venv/
+venv/
+__pycache__/
 
-./AuthtService/.idea
-./AuthtService/.venv
-./AuthtService/alembic/versions
+# Ігноруємо базу даних
+PostgreSQL/data/
 
-./PostgreSQL/data
+# Ігноруємо файли середовища з паролями
+.env
+

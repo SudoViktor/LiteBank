@@ -2,15 +2,18 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
 from app.database import get_db
+from app.config import get_current_user
 
-app = FastAPI(title="Mini Bank API")
+app = FastAPI(title="Transactions API")
 
 @app.get("/")
 async def root():
     return {"message": "Сервер Auth працює! 🚀"}
 
-# Перевіряємо, чи жива база
-@app.get("/db-ping")
-async def ping_db(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(text("SELECT 1"))
-    return {"status": "База даних підключена успішно!", "result": result.scalar()}
+@app.get("/my-accounts")
+async def get_my_accounts(current_user: str = Depends(get_current_user)):
+    return {
+        "message": "Ти успішно пройшов авторизацію!",
+        "user": current_user,
+        "accounts": ["UA123...", "UA999..."]
+    }

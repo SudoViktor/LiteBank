@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.orm import declarative_base
 
 DATABASE_URL = os.getenv(
-    "http://host.docker.internal:5432/",
+    "DATABASE_URL",
     "postgresql+asyncpg://auth_user:auth_pass123@localhost:5432/auth_service_db"
 )
 # Створюємо двигун

@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from app.database import Base
 
+#alembic upgrade head && alembic revision --autogenerate -m "-" &&
 
 class Transactions(Base):
     __tablename__ = "transactions"

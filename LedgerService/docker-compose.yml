@@ -4,10 +4,10 @@ services:
   api:
     build: .
     ports:
-      - "8003:8000"
+      - "8004:8000"
     environment:
       - KAFKA_URL=host.docker.internal:9094
-      - DATABASE_URL=postgresql+asyncpg://transactions_user:transactions_pass123@host.docker.internal:5432/transactions_db
+      - DATABASE_URL=postgresql+asyncpg://ledger_user:ledger_pass123@host.docker.internal:5432/ledger_db
     command: sh -c "alembic upgrade head && alembic revision --autogenerate -m "-" && alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     volumes:
       - .:/app

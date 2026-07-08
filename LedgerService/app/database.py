@@ -4,7 +4,7 @@ from sqlalchemy.orm import declarative_base
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql+asyncpg://transactions_user:transactions_pass123@localhost:5432/transactions_db"
+    "postgresql+asyncpg://ledger_user:ledger_pass123@localhost:5432/ledger_db"
 )
 # Створюємо двигун
 engine = create_async_engine(DATABASE_URL, echo=True)

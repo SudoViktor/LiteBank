@@ -6,7 +6,19 @@ from app.config import get_current_user
 from fastapi import HTTPException
 from app.models import Account, Card
 from pydantic import BaseModel
-app = FastAPI(title="Accounts API")
+
+from contextlib import asynccontextmanager
+from app.kafka_producer import kafka_producer
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Заходимо в контекст: автоматично викликається __aenter__ (старт)
+    async with kafka_producer:
+        yield  # Сервер працює і приймає запити
+    # Коли сервер вимикається, автоматично викликається __aexit__ (стоп)
+
+app = FastAPI(title="Accounts API", lifespan=lifespan)
 
 @app.get("/")
 async def root():
@@ -32,11 +44,13 @@ async def get_my_accounts(db: AsyncSession = Depends(get_db), current_user: str 
 async def create_account(db: AsyncSession = Depends(get_db), current_user: str = Depends(get_current_user)):
     account = await Account.create_account(db, current_user)
     print(account)
-    return {
+    res = {
         "message": "Account created!",
         "user": current_user,
         "account": account.get_iban()
     }
+    await kafka_producer.send_event("AccountOwners", res)
+    return res
 
 
 class CardInfo(BaseModel):

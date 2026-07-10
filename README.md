@@ -67,3 +67,8 @@ chmod +x run_all.sh
 ```console
 ./run_all.sh
 ```
+
+### Video Instruction
+https://github.com/user-attachments/assets/7707d339-8af9-41a8-88c5-a6610d6b2497
+
+

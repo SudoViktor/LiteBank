@@ -71,4 +71,5 @@ chmod +x run_all.sh
 ### Video Instruction
 https://github.com/user-attachments/assets/7707d339-8af9-41a8-88c5-a6610d6b2497
 
-
+http://localhost:3000/ -  веб версія банку
+http://localhost:3000/cashier.html - панель касира тут можна поповнити рахунок "за налічку". Пароль касира 1234

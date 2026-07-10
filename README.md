@@ -37,6 +37,39 @@
 * ⚙️ **`ledgerservice`**: Ядро системи, відповідальне за фінальну обробку фінансових операцій та розрахунок балансу.
 * 🖥 **`front`**: Веб-інтерфейс (SPA), що надає користувачу повний контроль над його фінансами.
 
-
 ---
-*Проєкт LiteBank — надійність у кожному байті.* 🚀
+
+## 🚀 Інструкція з розгортання
+
+Розгортання системи відбувається в кілька етапів. Переконайся, що у тебе встановлені **Docker** та **Docker Compose**.
+
+### Windows
+```console
+git clone https://github.com/SudoViktor/LiteBank.git
+```
+```console
+cd LiteBank
+```
+```console
+run_all.bat
+```
+
+### Linux/Mac
+```console
+git clone https://github.com/SudoViktor/LiteBank.git
+```
+```console
+cd LiteBank
+```
+```console
+chmod +x run_all.sh
+```
+```console
+./run_all.sh
+```
+
+### Video Instruction
+https://github.com/user-attachments/assets/7707d339-8af9-41a8-88c5-a6610d6b2497
+
+- http://localhost:3000/ -  веб версія банку
+- http://localhost:3000/cashier.html - панель касира тут можна поповнити рахунок "за налічку". Пароль касира 1234

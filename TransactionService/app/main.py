@@ -15,6 +15,7 @@ from app.kafka_consumer import (
     process_account_event,
     process_completed_transaction
 )
+from fastapi.middleware.cors import CORSMiddleware
 
 logger = logging.getLogger("uvicorn")
 
@@ -52,7 +53,13 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Transactions API", lifespan=lifespan)
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():
@@ -76,12 +83,16 @@ async def create_transaction(
     # КОНВЕРТАЦІЯ: множимо на 100, округлюємо (щоб уникнути мікро-похибок float), і робимо цілим числом
     amount_in_cents = int(round(transaction_info.amount * 100))
 
+    to_iban = transaction_info.to_iban
+    if len(to_iban) == 16:
+        to_iban =  transaction_info.to_iban
+
     try:
         transaction = await Transactions.create_transaction(
             db=db,
             current_username=current_user,
             from_account=transaction_info.from_iban,
-            to_account=transaction_info.to_iban,
+            to_account=to_iban,
             amount=amount_in_cents  # Передаємо копійки у БД
         )
     except ValueError as e:
@@ -107,4 +118,20 @@ async def create_transaction(
         "status": transaction.status,
         "requested_amount": transaction_info.amount,
         "kafka_event_data": kafka_payload
+    }
+
+@app.get("/history")
+async def get_transaction_history(
+    iban: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: str = Depends(get_current_user)
+):
+
+    history = await Transactions.get_history(db, iban, current_user)
+
+    return {
+        "message": "Історія транзакцій успішно завантажена",
+        "iban": iban,
+        "total_records": len(history),
+        "transactions": history
     }

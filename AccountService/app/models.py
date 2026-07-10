@@ -133,9 +133,12 @@ class Card(Base):
 
     @staticmethod
     async def get_active_cards_by_account_id(db: AsyncSession, account_id: int):
-        query = select(Card).where(Card.account_id == account_id).where(Card.is_active == True)
+        query = select(Card).where(
+            Card.account_id == account_id,
+            Card.is_active == True
+        )
         result = await db.execute(query)
-        return result.all()
+        return result.scalars().all()
 
     @staticmethod
     async def create_card(db: AsyncSession, account_id: int):

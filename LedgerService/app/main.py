@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 from app.kafka_consumer import consume_tranche_events
 from app.kafka_producer import kafka_producer
 from app.models import History
-
+from fastapi.middleware.cors import CORSMiddleware
 logger = logging.getLogger("uvicorn")
 
 
@@ -25,7 +25,13 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Ledger API", lifespan=lifespan)
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():

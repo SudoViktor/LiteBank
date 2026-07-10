@@ -5,13 +5,19 @@ from app.database import get_db
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel
-
+from fastapi.middleware.cors import CORSMiddleware
 from app.database import get_db
 from app.models import User
 from app.config import create_access_token
 
 app = FastAPI(title="Auth API")
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 @app.get("/")
 async def root():
     return {"message": "Сервер Auth працює 345345! 🚀"}

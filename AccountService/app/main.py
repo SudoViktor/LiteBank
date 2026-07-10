@@ -9,6 +9,7 @@ from pydantic import BaseModel
 
 from contextlib import asynccontextmanager
 from app.kafka_producer import kafka_producer
+from fastapi.middleware.cors import CORSMiddleware
 
 
 @asynccontextmanager
@@ -19,6 +20,14 @@ async def lifespan(app: FastAPI):
     # Коли сервер вимикається, автоматично викликається __aexit__ (стоп)
 
 app = FastAPI(title="Accounts API", lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():
@@ -38,6 +47,45 @@ async def get_my_accounts(db: AsyncSession = Depends(get_db), current_user: str 
         "message": "Ти успішно пройшов авторизацію!",
         "user": current_user,
         "accounts": res
+    }
+
+
+@app.get("/get-cards")  # Краще у множині, бо карток може бути декілька
+async def get_cards_by_iban(
+        iban: str,
+        db: AsyncSession = Depends(get_db),
+        current_user: str = Depends(get_current_user)
+):
+    account = await Account.get_account_by_iban(db, iban)
+
+    if not account:
+        raise HTTPException(
+            status_code=404,
+            detail="An account with this IBAN was not found."
+        )
+
+    if account.username != current_user:
+        raise HTTPException(
+            status_code=403,
+            detail="Access denied: this account does not belong to you."
+        )
+
+    active_cards = await Card.get_active_cards_by_account_id(db, account.id)
+
+    cards_data = [
+        {
+            "id": card.id,
+            "card_number": card.card_number,
+            "expiration_date": card.expiration_date,
+            "cvv": card.cvv,
+            "is_active": card.is_active
+        }
+        for card in active_cards
+    ]
+
+    return {
+        "iban": iban,
+        "cards": cards_data
     }
 
 @app.post("/create_account")

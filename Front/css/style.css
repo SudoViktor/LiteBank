@@ -1,0 +1,140 @@
+:root {
+    --bg-color: #f4f7f6;
+    --primary-color: #2c3e50;
+    --accent-color: #3498db;
+    --text-color: #333;
+    --error-color: #e74c3c;
+    --success-color: #2ecc71;
+    --warning-color: #f39c12;
+    --border-radius: 16px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+#app { width: 100%; max-width: 800px; padding: 20px; } /* Зробив вужчим для "мобільного" вигляду */
+.view-container { display: none; }
+.view-container.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+
+/* Авторизація */
+.auth-box { max-width: 400px; margin: 0 auto; background: white; padding: 40px; border-radius: var(--border-radius); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+.auth-box h1 { text-align: center; margin-bottom: 25px; color: var(--primary-color); font-size: 24px; }
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; color: #666; }
+.input-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; transition: border 0.3s; }
+.input-group input:focus { border-color: var(--accent-color); }
+
+/* Кнопки */
+button { width: 100%; padding: 14px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.3s; }
+button:hover { background-color: #1a252f; }
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-primary { background-color: var(--primary-color); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; width: auto; }
+.btn-outline { background-color: transparent; border: 1px solid #ddd; color: #555; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: 0.2s; width: auto; }
+.btn-outline:hover { border-color: var(--primary-color); color: var(--primary-color); }
+#logout-btn { background-color: #e74c3c; color: white; border: none; }
+
+.toggle-text { text-align: center; margin-top: 20px; font-size: 14px; }
+.toggle-text a { color: var(--accent-color); text-decoration: none; font-weight: 600; }
+.alert { padding: 12px; margin-bottom: 20px; border-radius: 8px; font-size: 14px; text-align: center; }
+.alert.hidden { display: none; }
+.alert.error { background-color: #fdecea; color: var(--error-color); border: 1px solid #f5c6cb; }
+.alert.success { background-color: #e8f8f5; color: var(--success-color); border: 1px solid #c3e6cb; }
+
+/* Навігація */
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: white; border-radius: var(--border-radius); box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 20px; }
+.nav-brand { font-size: 20px; font-weight: 700; color: var(--primary-color); }
+.nav-brand span { font-weight: 400; color: #888; }
+.nav-controls { display: flex; align-items: center; gap: 15px; }
+.user-greeting { font-weight: 500; color: #555; }
+
+/* Карусель (Слайдер) */
+.carousel-wrapper { display: flex; align-items: stretch; gap: 15px; }
+.carousel-nav-btn { background: white; border: 1px solid #eee; font-size: 20px; cursor: pointer; color: var(--primary-color); width: 45px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+.carousel-nav-btn:hover { background: #f8f9fa; transform: scale(1.05); }
+/* --- ОНОВЛЕНА КАРУСЕЛЬ З АНІМАЦІЄЮ --- */
+.carousel-content { 
+    flex: 1; 
+    background: white; 
+    border-radius: var(--border-radius); 
+    padding: 30px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+    min-height: 450px; 
+    position: relative; 
+    overflow: hidden; /* Обов'язково: щоб карти, які вилітають, не розтягували екран */
+}
+
+/* Внутрішній контейнер, який безпосередньо буде анімуватися */
+.carousel-slide-inner {
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+    width: 100%;
+    height: 100%;
+}
+
+/* Стан вильоту вліво (коли гортаємо вперед) */
+.slide-out-left {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+/* Стан вильоту вправо (коли гортаємо назад) */
+.slide-out-right {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+/* Початкова позиція для заїзду справа */
+.slide-in-right {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+/* Початкова позиція для заїзду зліва */
+.slide-in-left {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+.carousel-dots { text-align: center; margin-top: 20px; }
+.dot { display: inline-block; width: 8px; height: 8px; background: #ddd; border-radius: 50%; margin: 0 5px; cursor: pointer; transition: 0.3s; }
+.dot.active { background: var(--primary-color); transform: scale(1.3); }
+
+/* Вміст рахунку */
+.account-header { text-align: center; margin-bottom: 25px; }
+.account-title { font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+.account-iban { font-size: 14px; font-weight: 500; color: #aaa; margin-top: 4px; }
+.account-balance { font-size: 36px; font-weight: 700; color: var(--primary-color); margin-top: 10px; letter-spacing: -0.5px; }
+.account-balance .currency { font-size: 18px; color: #888; font-weight: 500; }
+
+/* Кнопки дій (Поповнити / Переказати) */
+.account-main-actions { display: flex; gap: 15px; margin-bottom: 30px; }
+.action-btn { flex: 1; padding: 15px; border-radius: 12px; border: none; background: #f8f9fa; cursor: pointer; font-weight: 600; color: var(--primary-color); display: flex; flex-direction: column; align-items: center; gap: 8px; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+.action-btn:hover { background: #eef2f5; transform: translateY(-2px); }
+
+/* Дизайн банківської картки */
+.bank-card { background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 25px; border-radius: 16px; position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.15); margin-bottom: 30px; cursor: pointer; transition: transform 0.2s; }
+.bank-card:hover { transform: scale(1.02) translateY(-3px); box-shadow: 0 15px 25px rgba(0,0,0,0.2); }
+.bank-card::before { content: ''; position: absolute; top: -50px; right: -50px; width: 120px; height: 120px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+.card-number { font-family: 'Courier New', Courier, monospace; font-size: 22px; letter-spacing: 3px; margin-bottom: 20px; margin-top: 5px; }
+.card-details { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; }
+.card-details span { color: #f8fafc; font-weight: 500; font-size: 14px; display: block; margin-top: 4px;}
+.card-hint { font-size: 11px; text-align: center; margin-top: 15px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 1px; }
+
+/* Транзакції */
+.transactions-section h4 { margin-bottom: 15px; color: #555; font-size: 15px; }
+.transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
+.transaction-item:last-child { border-bottom: none; }
+.tx-info { display: flex; flex-direction: column; gap: 4px; }
+.tx-title { font-weight: 600; font-size: 15px; color: #333; }
+.tx-date { font-size: 12px; color: #888; }
+.tx-amount { font-weight: 700; font-size: 15px; }
+.tx-amount.positive { color: var(--success-color); }
+
+/* Модальне вікно налаштувань */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(4px); }
+.modal.hidden { display: none; }
+.modal-content { background: #fff; width: 90%; max-width: 400px; border-radius: 20px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+.modal-header h3 { font-size: 18px; color: var(--primary-color); }
+.close-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: #888; width: auto; padding: 0; }
+.modal-actions { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }

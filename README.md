@@ -37,6 +37,23 @@
 * ⚙️ **`ledgerservice`**: Ядро системи, відповідальне за фінальну обробку фінансових операцій та розрахунок балансу.
 * 🖥 **`front`**: Веб-інтерфейс (SPA), що надає користувачу повний контроль над його фінансами.
 
-
 ---
-*Проєкт LiteBank — надійність у кожному байті.* 🚀
+
+## 🚀 Інструкція з розгортання
+
+Розгортання системи відбувається в кілька етапів. Переконайся, що у тебе встановлені **Docker** та **Docker Compose**.
+
+### Windows
+```bash
+git clone [https://github.com/SudoViktor/LiteBank.git](https://github.com/SudoViktor/LiteBank.git)
+cd LiteBank
+run_all.bat
+
+### Linux/Mac
+```bash
+git clone [https://github.com/SudoViktor/LiteBank.git](https://github.com/SudoViktor/LiteBank.git)
+cd LiteBank
+chmod +x run_all.sh
+./run_all.sh
+
+

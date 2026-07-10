@@ -32,7 +32,7 @@ class History(Base):
             to_account: str,
             amount: int,
             initiator_user: str,
-            from_account: str = None
+            from_account: str = None,
     ):
         """
         Універсальна функція для створення запису в історії Леджера.

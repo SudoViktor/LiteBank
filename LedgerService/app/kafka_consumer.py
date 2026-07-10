@@ -36,20 +36,29 @@ async def process_tranche_event(event_data: dict) -> bool:
 
     try:
         async with AsyncSessionLocal() as db:
-            await History.create_ledger_entry(
-                db=db,
-                transaction_id=event_data['transaction_id'],
-                tx_type=event_data['type'],
-                to_account=event_data['to_account'],
-                amount=event_data['amount'],
-                initiator_user=event_data['initiator_user'],
-                from_account=event_data.get('from_account')
-            )
 
+            status = "cancel"
+            balance = await History.get_balance(db, event_data.get('from_account'))
+            if event_data['type'] == "p2p":
+                logger.info(f"{balance} : {event_data['amount']}")
+                if (balance - event_data['amount']) >= 0:
+                    status = "success"
             complete_payload = {
                 "transaction_id": event_data['transaction_id'],
-                "status": "success",
+                "status": status,
             }
+
+            if status == "success":
+                await History.create_ledger_entry(
+                    db=db,
+                    transaction_id=event_data['transaction_id'],
+                    tx_type=event_data['type'],
+                    to_account=event_data['to_account'],
+                    amount=event_data['amount'],
+                    initiator_user=event_data['initiator_user'],
+                    from_account=event_data.get('from_account')
+                )
+
             await kafka_producer.send_event("CompleteTransaction", complete_payload)
         return True
 

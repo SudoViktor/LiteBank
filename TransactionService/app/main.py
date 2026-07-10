@@ -135,3 +135,51 @@ async def get_transaction_history(
         "total_records": len(history),
         "transactions": history
     }
+
+CASH_DESK_PASSWORD = "1234"
+
+class CashDeskTransaction(BaseModel):
+    iban: str
+    amount: float
+    cashier_password: str
+
+@app.post("/cash_desk_withdrawal")
+async def cash_desk_withdrawal(
+    data: CashDeskTransaction,
+    db: AsyncSession = Depends(get_db)
+):
+    if data.cashier_password != CASH_DESK_PASSWORD:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Невірний пароль касира"
+        )
+
+    amount_in_cents = int(round(data.amount * 100))
+
+    try:
+        transaction = await Transactions.create_transaction(
+            db=db,
+            current_username="CASH_DESK_SYSTEM",
+            from_account="CASH_DESK_SYSTEM",
+            to_account=data.iban,
+            amount=amount_in_cents
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+    kafka_payload = {
+        "transaction_id": transaction.id,
+        "type": "cash_deposit",
+        "from_account": transaction.from_account,
+        "to_account": transaction.to_account,
+        "amount": transaction.amount,
+        "status": transaction.status,
+        "initiator_user": "CASH_DESK_OPERATOR"
+    }
+    await kafka_producer.send_event("CreateTransaction", kafka_payload)
+
+    return {
+        "message": "Операція видачі готівки ініційована",
+        "transaction_id": transaction.id,
+        "amount": data.amount
+    }

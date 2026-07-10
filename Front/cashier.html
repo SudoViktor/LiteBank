@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>LiteBank | Cashier Panel</title>
+    <style>
+        :root { --primary-color: #2c3e50; --success-color: #2ecc71; --error-color: #e74c3c; }
+        body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 350px; }
+        h2 { text-align: center; color: var(--primary-color); }
+        .input-group { margin: 15px 0; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: var(--success-color); color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .alert { padding: 10px; margin-top: 15px; border-radius: 5px; text-align: center; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>👨‍💻 Панель касира</h2>
+    <div id="alert" class="alert"></div>
+    <form id="cashier-form">
+        <div class="input-group">
+            <label>IBAN рахунку</label>
+            <input type="text" id="iban" required placeholder="UA...">
+        </div>
+        <div class="input-group">
+            <label>Сума видачі</label>
+            <input type="number" step="0.01" id="amount" required>
+        </div>
+        <div class="input-group">
+            <label>Пароль касира</label>
+            <input type="password" id="password" required>
+        </div>
+        <button type="submit">Видати готівку</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('cashier-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const alertBox = document.getElementById('alert');
+        const payload = {
+            iban: document.getElementById('iban').value,
+            amount: parseFloat(document.getElementById('amount').value),
+            cashier_password: document.getElementById('password').value
+        };
+
+        try {
+            // Звертаємось на твій Transaction API (порт 8000)
+            const response = await fetch('http://localhost:8003/cash_desk_withdrawal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.detail);
+
+            alertBox.textContent = "✅ Видано: " + payload.amount + " UAH";
+            alertBox.style.display = "block";
+            alertBox.style.background = "#e8f8f5";
+            alertBox.style.color = "#2ecc71";
+            document.getElementById('cashier-form').reset();
+        } catch (err) {
+            alertBox.textContent = "❌ " + err.message;
+            alertBox.style.display = "block";
+            alertBox.style.background = "#fdecea";
+            alertBox.style.color = "#e74c3c";
+        }
+    });
+</script>
+
+</body>
+</html>

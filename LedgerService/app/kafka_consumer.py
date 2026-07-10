@@ -43,6 +43,11 @@ async def process_tranche_event(event_data: dict) -> bool:
                 logger.info(f"{balance} : {event_data['amount']}")
                 if (balance - event_data['amount']) >= 0:
                     status = "success"
+
+
+            if event_data['type'] == "cash_deposit":
+                status = "success"
+
             complete_payload = {
                 "transaction_id": event_data['transaction_id'],
                 "status": status,

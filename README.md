@@ -44,16 +44,26 @@
 Розгортання системи відбувається в кілька етапів. Переконайся, що у тебе встановлені **Docker** та **Docker Compose**.
 
 ### Windows
-```bash
-git clone [https://github.com/SudoViktor/LiteBank.git](https://github.com/SudoViktor/LiteBank.git)
+```console
+git clone https://github.com/SudoViktor/LiteBank.git
+```
+```console
 cd LiteBank
+```
+```console
 run_all.bat
+```
 
 ### Linux/Mac
-```bash
-git clone [https://github.com/SudoViktor/LiteBank.git](https://github.com/SudoViktor/LiteBank.git)
+```console
+git clone https://github.com/SudoViktor/LiteBank.git
+```
+```console
 cd LiteBank
+```
+```console
 chmod +x run_all.sh
+```
+```console
 ./run_all.sh
-
-
+```
